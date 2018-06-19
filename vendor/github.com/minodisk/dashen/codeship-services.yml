@@ -1,0 +1,6 @@
+services:
+
+  dashen:
+    build: .
+    cached: true
+    encrypted_env_file: codecov.env.encrypted

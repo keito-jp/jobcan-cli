@@ -1,67 +1,74 @@
 package main
 
 import (
-	"bytes"
-	"encoding/json"
-	"net/http"
+	"fmt"
 	"os"
 
+	"github.com/minodisk/dashen"
+	"github.com/nlopes/slack"
 	"github.com/syoya/slack-button/models"
 )
 
-type Slack struct {
-	Text string `json:"text"`
+func main() {
+	d := dashen.New()
+	d.Subscribe(os.Getenv("DASH_MAC"), func() {
+		dakoku()
+	})
+	if err := d.Listen(); err != nil {
+		panic(err)
+	}
 }
 
-func main() {
+func dakoku() {
 	j, err := models.NewJobcan(
 		os.Getenv("JOBCAN_CLIENT_ID"),
 		os.Getenv("JOBCAN_EMAIL"),
 		os.Getenv("JOBCAN_PASSWORD"),
 	)
 	if err != nil {
-		println(err)
-		postSlak(err.Error())
+		fmt.Println(err)
+		postSlack(err.Error())
 		return
 	}
 	err = j.Punch()
 	if err != nil {
-		println(err)
-		postSlak(err.Error())
+		fmt.Println(err)
+		postSlack(err.Error())
 		return
 	}
 	s, err := j.Status()
 	if err != nil {
-		println(err)
-		postSlak(err.Error())
+		fmt.Println(err)
+		postSlack(err.Error())
 		return
 	}
-	println(s)
-	postSlak(s)
+	switch s {
+	case "having_breakfast", "resting":
+		{
+			msg := "離席してます。\n"
+			postSlack(msg)
+			fmt.Println(msg)
+		}
+	case "working":
+		{
+			msg := "出勤してます。\n"
+			postSlack(msg)
+			fmt.Println(msg)
+		}
+	}
 }
 
 // Slackに投稿
-func postSlak(text string) error {
-	slack := &Slack{
-		Text: text,
+func postSlack(text string) {
+	api := slack.New(os.Getenv("JOBCAN_SLACK_API_TOKEN"))
+	params := slack.PostMessageParameters{
+		Username: os.Getenv("JOBCAN_SLACK_NAME"),
+		AsUser:   true,
 	}
-	requestBody, err := json.Marshal(slack)
+	channelID, timestamp, err := api.PostMessage(os.Getenv("JOBCAN_SLACK_CHANNEL"), text, params)
 	if err != nil {
-		return err
+		fmt.Println(err)
+		return
 	}
-	req, err := http.NewRequest(
-		"POST",
-		os.Getenv("SLACK_POST_URL"),
-		bytes.NewBuffer(requestBody),
-	)
-	if err != nil {
-		return err
-	}
-	req.Header.Set("Content-Type", "application/json")
-	client := &http.Client{}
-	_, err = client.Do(req)
-	if err != nil {
-		return err
-	}
-	return nil
+	fmt.Printf("Message successfully sent to channel %s at %s\n", channelID, timestamp)
 }
