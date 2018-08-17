@@ -1,4 +1,5 @@
-package models
+// Package jobcan provides interfaces that enable to use at go codes.
+package jobcan
 
 import (
 	"encoding/json"
@@ -12,15 +13,18 @@ import (
 	"github.com/robertkrimen/otto"
 )
 
+// Jobcan is the struct for defining the Jobcan class.
 type Jobcan struct {
 	jar    *cookiejar.Jar
 	client *http.Client
 }
 
+// KintaiErrors is the struct for error of punching in.
 type KintaiErrors struct {
 	AditCount string `json:"aditCount"`
 }
 
+// Kintai is the struct for save result of punching in.
 type Kintai struct {
 	Result        int          `json:"result"`
 	State         int          `json:"state"`
@@ -28,7 +32,8 @@ type Kintai struct {
 	Errors        KintaiErrors `json:"errors"`
 }
 
-func NewJobcan(clientId string, email string, password string) (*Jobcan, error) {
+// NewJobcan is constructor of Jobcan class.
+func NewJobcan(clientID string, email string, password string) (*Jobcan, error) {
 	jar, err := cookiejar.New(nil)
 	if err != nil {
 		fmt.Println(err)
@@ -38,7 +43,7 @@ func NewJobcan(clientId string, email string, password string) (*Jobcan, error) 
 
 	// ログイン処理
 	values := url.Values{
-		"client_id":  {clientId},
+		"client_id":  {clientID},
 		"email":      {email},
 		"password":   {password},
 		"url":        {"/employee"},
@@ -59,6 +64,7 @@ func NewJobcan(clientId string, email string, password string) (*Jobcan, error) 
 	return &Jobcan{jar: jar, client: client}, nil
 }
 
+// Punch punch in
 func (j *Jobcan) Punch() error {
 	doc, err := j.getPage()
 	if err != nil {
@@ -69,7 +75,7 @@ func (j *Jobcan) Punch() error {
 	var token string
 	token, exists := doc.Find("input.token").First().Attr("value")
 	if !exists {
-		return &JobcanError{
+		return &Error{
 			Message: "トークンが見つかりませんでした。",
 			Status:  "TokenNotFound",
 		}
@@ -105,19 +111,19 @@ func (j *Jobcan) Punch() error {
 	case "":
 		return nil
 	case "duplicate":
-		return &JobcanError{
+		return &Error{
 			Message: "打刻できませんでした。打刻の間隔が短すぎます。",
 			Status:  "TooShortInterval",
 		}
 	default:
-		return &JobcanError{
+		return &Error{
 			Message: "打刻できませんでした。",
 			Status:  "CouldNotPunch",
 		}
 	}
 }
 
-// Status は現在の勤怠ステータスを取得する
+// Status read current status of Jobcan.
 func (j *Jobcan) Status() (string, error) {
 	doc, err := j.getPage()
 	if err != nil {
@@ -153,11 +159,12 @@ func (j *Jobcan) getPage() (*goquery.Document, error) {
 	return doc, nil
 }
 
-type JobcanError struct {
+// Error is Error type of Jobcan class.
+type Error struct {
 	Message string
 	Status  string
 }
 
-func (err *JobcanError) Error() string {
+func (err *Error) Error() string {
 	return fmt.Sprintln(err.Message, err.Status)
 }

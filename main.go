@@ -6,7 +6,7 @@ import (
 
 	"github.com/minodisk/dashen"
 	"github.com/nlopes/slack"
-	"github.com/syoya/slack-button/models"
+	"github.com/syoya/slack-button/jobcan"
 )
 
 func main() {
@@ -20,7 +20,7 @@ func main() {
 }
 
 func dakoku() {
-	j, err := models.NewJobcan(
+	j, err := jobcan.NewJobcan(
 		os.Getenv("JOBCAN_CLIENT_ID"),
 		os.Getenv("JOBCAN_EMAIL"),
 		os.Getenv("JOBCAN_PASSWORD"),
