@@ -3,7 +3,7 @@
 ## Install
 
 ```shell
-go get github.com/syoya/jobcan-cli
+go get github.com/keito-jp/jobcan-cli
 ```
 
 ## Usage
