@@ -5,21 +5,10 @@ import (
 	"os"
 
 	"github.com/keito-jp/jobcan-cli/jobcan"
-	"github.com/minodisk/dashen"
 	"github.com/nlopes/slack"
 )
 
 func main() {
-	d := dashen.New()
-	d.Subscribe(os.Getenv("DASH_MAC"), func() {
-		dakoku()
-	})
-	if err := d.Listen(); err != nil {
-		panic(err)
-	}
-}
-
-func dakoku() {
 	j, err := jobcan.NewJobcan(
 		os.Getenv("JOBCAN_CLIENT_ID"),
 		os.Getenv("JOBCAN_EMAIL"),

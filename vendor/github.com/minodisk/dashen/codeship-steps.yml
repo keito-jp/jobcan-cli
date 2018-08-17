@@ -1,3 +1,0 @@
-- name: test
-  service: dashen
-  command: sh test.sh
