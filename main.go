@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/keito-jp/jobcan-cli/jobcan"
 	"github.com/minodisk/dashen"
 	"github.com/nlopes/slack"
-	"github.com/syoya/slack-button/jobcan"
 )
 
 func main() {

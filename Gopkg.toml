@@ -26,8 +26,20 @@
 
 
 [[constraint]]
+  name = "github.com/PuerkitoBio/goquery"
+  version = "1.4.1"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/minodisk/dashen"
+
+[[constraint]]
   name = "github.com/nlopes/slack"
-  version = "0.2.0"
+  version = "0.3.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/robertkrimen/otto"
 
 [prune]
   go-tests = true

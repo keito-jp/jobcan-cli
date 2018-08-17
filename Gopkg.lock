@@ -38,8 +38,8 @@
 [[projects]]
   name = "github.com/nlopes/slack"
   packages = ["."]
-  revision = "8ab4d0b364ef1e9af5d102531da20d5ec902b6c4"
-  version = "v0.2.0"
+  revision = "0db1d5eae1116bf7c8ed96c6749acfbf4daaec3e"
+  version = "v0.3.0"
 
 [[projects]]
   name = "github.com/pkg/errors"
@@ -59,7 +59,7 @@
     "registry",
     "token"
   ]
-  revision = "03d472dc43abece8691e609a23d295ab732abba6"
+  revision = "15f95af6e78dcd2030d8195a138bd88d4f403546"
 
 [[projects]]
   branch = "master"
@@ -68,7 +68,7 @@
     "html",
     "html/atom"
   ]
-  revision = "db08ff08e8622530d9ed3a0e8ac279f6d4c02196"
+  revision = "aaf60122140d3fcf75376d319f0554393160eb50"
 
 [[projects]]
   name = "gopkg.in/sourcemap.v1"
@@ -82,6 +82,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "9bfdae45145a02d3253ae05c3da8a4492044dea161fa4193115b94a33631167c"
+  inputs-digest = "2a59e2a685d405a5dec906be8857884a1291ecee403826ddcc0dc37ba132d55a"
   solver-name = "gps-cdcl"
   solver-version = 1
